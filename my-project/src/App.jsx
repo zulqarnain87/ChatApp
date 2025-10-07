@@ -1,25 +1,30 @@
-// src/App.jsx 
-// 💡 Note the change from BrowserRouter to HashRouter
-import { HashRouter, Routes, Route } from "react-router-dom"; 
-// ... other imports
+// src/App.jsx
+// Application routes. Uses BrowserRouter with a basename so routes match
+// when the app is deployed under a subpath (for example: /ChatApp/).
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import ChatList from './pages/ChatList'
+import ChatWindow from './pages/ChatWindow'
+import Discover from './pages/Discover'
+import PrivateRoute from './components/PrivateRoute'
 
-function App() {
+export default function App() {
+  // import.meta.env.BASE_URL is provided by Vite and reflects the base path
+  // using BrowserRouter's basename ensures the router strips the base path
+  // when matching routes (fixes "No routes matched location \"/ChatApp/\"").
   return (
-    // 💡 Use HashRouter instead of BrowserRouter
-    <HashRouter> 
+    <Router basename="/ChatApp"> 
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
         {/* Protected area */}
-        {/* The URL will now look like: /ChatApp/#/discover */}
         <Route path="/" element={<PrivateRoute><ChatList /></PrivateRoute>} />
         <Route path="/discover" element={<PrivateRoute><Discover /></PrivateRoute>} />
         <Route path="/chats" element={<PrivateRoute><ChatList /></PrivateRoute>} />
         <Route path="/chat/:chatId" element={<PrivateRoute><ChatWindow /></PrivateRoute>} />
       </Routes>
-    </HashRouter>
-  );
+    </Router>
+  )
 }
-
-export default App;
